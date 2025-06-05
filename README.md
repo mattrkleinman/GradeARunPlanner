@@ -10,7 +10,7 @@ Routes emphasize consistent outbound movement, so you won't be making lots of sm
 
 For the first run, after entering the starting location, distance, and grade, use the buttons to:
 
-  1. Retrieve the location of the starting address
+  1. Find the coordinates of the starting address
   
   2. Generate a graph file
   
