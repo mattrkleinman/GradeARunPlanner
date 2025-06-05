@@ -163,7 +163,7 @@ if __name__ == "__main__":
         st.session_state.graph_file = graph_file
 
     # Users will continue here, generating and saving start node to destination node routes
-    if st.button('Calculate routes from uploaded graphml. This may take awhile...'):
+    if st.button('Calculate new routes from uploaded graphml. This may take awhile...'):
         if graph_file is not None:
             st.session_state.routes = make_routes(st.session_state.G_c, st.session_state.point, filepref)
             
