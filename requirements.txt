@@ -1,0 +1,8 @@
+osmnx==2.0.3
+geopy==2.4.1
+matplotlib==3.10.3
+shapely==2.1.1
+numpy==2.2.6
+streamlit==1.45.1
+pandas==2.2.3
+streamlit_folium==0.25.0
