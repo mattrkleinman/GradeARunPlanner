@@ -99,9 +99,7 @@ if __name__ == "__main__":
     st.write("(4) Generate a routes file")
     st.write("(5) Upload it in the routes upload box")
     st.write("(6) Click the evaluate routes button")
-    st.write("After this, the desired distance and grade parameters can be changed and the new best matching routes will be plotted after clicking the 'Evaluate routes' button. Initial map and routes generation can take awhile, especially for distances >10 miles.")
-
-    st.write("For the smoothest operation, generate a unique map and routes file for a given starting location and distance. Unexpected errors can occur when trying to use map and routes files generated with different distance radii from the starting address, due to non-overlapping nodes and routes. Once a map is generated, the desired distance can be adjusted to suit shorter length runs, and matching routes re-evaluated.")
+    st.write("After this, the desired distance and grade parameters can be changed and the new best matching routes will be plotted after clicking the 'Evaluate routes' button. Initial map and routes generation can take awhile, especially for distances >10 miles. The previously-made graph and routes files can be uploaded again for subsequent route planning, rather than recreated fresh.")
 
     # Initialize session state variables
     if "good_routes" not in st.session_state:
@@ -232,8 +230,7 @@ if __name__ == "__main__":
             st.session_state.good_routes = good_routes
    
     # Now that routes are calculated, we can display whichever ones we want
-    st.write('After routes are calculated, they will be plotted in batches of five, starting with the Nth best route specified below.')
-    startroute = st.number_input('Which route to begin plot (1 matches criteria best)?', value=1)
+    startroute = st.number_input('Begin plotted routes with which route number (route #1 is best match)? Five total routes, beginning with selection, will be displayed at a time.', value=1)
     st.write(f'{len(st.session_state.good_routes)} total distinct routes')
     
     if (len(st.session_state.good_routes)>0) and (st.session_state.reevaluate_routes==0):
@@ -262,7 +259,7 @@ if __name__ == "__main__":
           color_hex = colors[int(val-startroute)] 
           return f'background-color: {color_hex}; color: {color_hex}' 
         
-        st_df = st.dataframe(disp_routes.style.applymap(route_cols,subset='Color'), hide_index=True)
+        st_df = st.dataframe(disp_routes.style.applymap(route_cols,subset='Color'), column_config={"Route Rank": st.column_config.NumberColumn(format="%.0f"), "Distance (miles)": st.column_config.NumberColumn(format="%.2f"), "Grade (%)": st.column_config.NumberColumn(format="%.2f")}, hide_index=True)
         
         # Initialize a minimal graph to center the folium map
         G_min = ox.graph_from_address(address=loc, dist=100, dist_type="network", network_type="walk", simplify=True)
