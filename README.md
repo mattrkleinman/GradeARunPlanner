@@ -2,6 +2,8 @@
 
 Python streamlit app for finding running/walking routes with specific grades, so you can plan how hilly you want your exercise to be. 
 
+Setup: [Install OSMnx](https://osmnx.readthedocs.io/en/stable/installation.html) and project requirements, then run "streamlit run GradeARunPlanner.py" from the OSMnx environment terminal.  
+
 Provide a starting address, total run distance, and outbound grade, and Grade A Run Planner will find routes and score how close they are to your preferences. Routes with a large degree of overlap will be removed, ensuring meaningfully distinct potential routes will be found. The best five matching routes will then be shown on an interactive map. 
 
 Routes emphasize consistent outbound movement, so you won't be making lots of small turns or loops. The start and end address are set to be the same, meaning each run will involve turning around at the furthest extent and retracing your steps. This also means while the outbound half of the run will match the specified grade, the grade of the full route will be zero. 
