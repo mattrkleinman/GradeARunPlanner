@@ -22,7 +22,7 @@ For the first run, after entering the starting location, distance, and grade, us
   
   6. Click the evaluate routes button
   
-After this, the desired distance and grade parameters can be changed and the new best matching routes will be plotted after clicking evaluate. Initial map and routes generation can take awhile, especially for distances >20 miles.
+After this, the desired distance and grade parameters can be changed and the new best matching routes will be plotted after clicking evaluate. Initial map and routes generation can take awhile, especially for distances >20 miles. The previously-made graph and routes files can be uploaded again for subsequent route planning, rather than recreated fresh.
 
 For the smoothest operation, generate a unique map and routes file for a given starting location and distance. Unexpected errors can occur when trying to use map and routes files generated with different distance radii from the starting address, due to non-overlapping nodes and routes. Once a map is generated, the desired distance can be adjusted to suit shorter length runs, and matching routes re-evaluated.
 
