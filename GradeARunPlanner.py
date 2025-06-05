@@ -8,6 +8,8 @@ import streamlit as st
 import pandas as pd
 from streamlit_folium import st_folium, folium_static
 import csv
+import os
+import inspect
 
 def get_address_loc(loc):
     # Get latitude and longitude for user-specified address
@@ -46,7 +48,7 @@ def make_graph(loc,graphpath,rundist):
 
 def read_graph(graph_file):
     # Read in generated graph file
-    G_c = ox.io.load_graphml(graph_file.name)
+    G_c = ox.io.load_graphml(graph_file)
     return G_c
 
 def make_routes(G_c, point, filepref):
@@ -70,7 +72,7 @@ def make_routes(G_c, point, filepref):
 
 def read_routes(routes_file):
     # Read csv file that contains all routes from starter node
-    file = open(routes_file.name, "r")
+    file = open(routes_file, "r")
     read_routes = list(csv.reader(file, delimiter=","))
     file.close()
     
@@ -91,13 +93,13 @@ if __name__ == "__main__":
     st.write("Provide a starting address, distance, and outbound grade, and Grade A Run Planner will find a matching route. Routes with a large degree of overlap will be removed, ensuring meaningfully distinct potential routes will be found.")
 
     st.write("For the first run, use the buttons to:")
-    st.write("(1) retrieve the location of the starting address")
-    st.write("(2) generate a graph file") 
-    st.write("(3) upload it in the graph upload box")
-    st.write("(4) generate a routes file")
-    st.write("(5) upload it in the routes upload box")
-    st.write("(6) click the evaluate routes button")
-    st.write("After this, the desired distance and grade parameters can be changed and the new best matching routes will be plotted after clicking evaluate. Initial map and routes generation can take awhile, especially for distances >10 miles.")
+    st.write("(1) Find coordinates of the starting address")
+    st.write("(2) Generate a graph file") 
+    st.write("(3) Upload it in the graph upload box")
+    st.write("(4) Generate a routes file")
+    st.write("(5) Upload it in the routes upload box")
+    st.write("(6) Click the evaluate routes button")
+    st.write("After this, the desired distance and grade parameters can be changed and the new best matching routes will be plotted after clicking the 'Evaluate routes' button. Initial map and routes generation can take awhile, especially for distances >10 miles.")
 
     st.write("For the smoothest operation, generate a unique map and routes file for a given starting location and distance. Unexpected errors can occur when trying to use map and routes files generated with different distance radii from the starting address, due to non-overlapping nodes and routes. Once a map is generated, the desired distance can be adjusted to suit shorter length runs, and matching routes re-evaluated.")
 
@@ -118,6 +120,11 @@ if __name__ == "__main__":
         st.session_state.routes_file = []   
     if "reevaluate_routes" not in st.session_state:
         st.session_state.reevaluate_routes = 0
+    if "current_dir" not in st.session_state:
+        st.session_state.current_dur = []
+
+    if len(st.session_state.current_dur)==0:
+        st.session_state.current_dur = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
     loc = st.text_input('Full starting street address: ')
     st.session_state.location = loc
@@ -134,7 +141,7 @@ if __name__ == "__main__":
     # For saving files, remove commas, replace spaces with underscore
     fname = loc.replace(', ', '_')
     fname = fname.replace(' ', '_') #catch any missed spaces
-    filepref = fname+'_'+str(rundist_miles)+'_miles'
+    filepref = st.session_state.current_dur+'\\data_files\\'+fname+'_'+str(rundist_miles)+'_miles'
     graphpath = filepref+'.graphml'
 
     # Users will start here, making and saving a graph file
@@ -148,11 +155,12 @@ if __name__ == "__main__":
     # Make graph upload box to upload saved graph
     graph_file = st.file_uploader("Choose a graphml graph file to upload.", type="graphml")
     if (graph_file is not None) and (len(st.session_state.G_c)==0):
-        st.session_state.G_c = read_graph(graph_file)
+        print(graph_file)
+        st.session_state.G_c = read_graph(st.session_state.current_dur+'\\data_files\\'+graph_file.name)
         st.session_state.graph_file = graph_file
     # User changed the map they uploaded
     if (graph_file is not None) and (graph_file != st.session_state.graph_file): 
-        st.session_state.G_c = read_graph(graph_file)
+        st.session_state.G_c = read_graph(st.session_state.current_dur+'\\data_files\\'+graph_file.name)
         st.session_state.graph_file = graph_file
 
     # Users will continue here, generating and saving start node to destination node routes
@@ -163,11 +171,11 @@ if __name__ == "__main__":
     # Make routes upload box
     routes_file = st.file_uploader("Choose a csv routes file to upload.", type="csv")
     if (routes_file is not None) and (len(st.session_state.routes)==0):
-        st.session_state.routes = read_routes(routes_file)   
+        st.session_state.routes = read_routes(st.session_state.current_dur+'\\data_files\\'+routes_file.name)   
         st.session_state.routes_file = routes_file
     # User changed the routes they uploaded
     if (routes_file is not None) and (routes_file != st.session_state.routes_file): 
-        st.session_state.routes = read_routes(routes_file) 
+        st.session_state.routes = read_routes(st.session_state.current_dur+'\\data_files\\'+routes_file.name) 
         st.session_state.routes_file = routes_file
         st.session_state.reevaluate_routes = 1
 
