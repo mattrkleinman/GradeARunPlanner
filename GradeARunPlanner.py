@@ -155,7 +155,6 @@ if __name__ == "__main__":
     # Make graph upload box to upload saved graph
     graph_file = st.file_uploader("Choose a graphml graph file to upload.", type="graphml")
     if (graph_file is not None) and (len(st.session_state.G_c)==0):
-        print(graph_file)
         st.session_state.G_c = read_graph(st.session_state.current_dur+'\\data_files\\'+graph_file.name)
         st.session_state.graph_file = graph_file
     # User changed the map they uploaded
